@@ -11,6 +11,7 @@ import type {
     DialogFooterProps,
     DialogHeaderProps,
     DialogTitleProps,
+    HostComponentProps,
     InputProps,
     LabelProps,
     ScrollAreaProps,
@@ -45,6 +46,11 @@ export const CardHeader = createHostComponent<CardHeaderProps>("CardHeader", (ho
 export const CardTitle = createHostComponent<CardTitleProps>("CardTitle", (hostApi) => hostApi.components.CardTitle);
 /** Boolean or indeterminate checkbox. @dartwic-reference @category UI Components */
 export const Checkbox = createHostComponent<CheckboxProps>("Checkbox", (hostApi) => hostApi.components.Checkbox);
+export const ContextMenu = createHostComponent<HostComponentProps>("ContextMenu", (hostApi) => hostApi.components.ContextMenu);
+export const ContextMenuContent = createHostComponent<HostComponentProps>("ContextMenuContent", (hostApi) => hostApi.components.ContextMenuContent);
+export const ContextMenuItem = createHostComponent<HostComponentProps>("ContextMenuItem", (hostApi) => hostApi.components.ContextMenuItem);
+export const ContextMenuSeparator = createHostComponent<HostComponentProps>("ContextMenuSeparator", (hostApi) => hostApi.components.ContextMenuSeparator);
+export const ContextMenuTrigger = createHostComponent<HostComponentProps>("ContextMenuTrigger", (hostApi) => hostApi.components.ContextMenuTrigger);
 /** Accessible dialog description. @dartwic-reference @category UI Components */
 export const DialogDescription = createHostComponent<DialogDescriptionProps>("DialogDescription", (hostApi) => hostApi.components.DialogDescription);
 /** Dialog action footer. @dartwic-reference @category UI Components */

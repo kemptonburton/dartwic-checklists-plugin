@@ -33,6 +33,22 @@ export function useDartwicChannelValues(...args: unknown[]) {
     return callHostHook("useDartwicChannelValues", args);
 }
 
+export function useConfigurableInput(data: Record<string, unknown>) {
+    return callHostHook("useConfigurableInput", [data]);
+}
+
+export function useIfElseBlock(data: Record<string, unknown>) {
+    return callHostHook("useIfElseBlock", [data]);
+}
+
+export function useChannelDropTarget(handler: (payload: unknown) => void, options?: Record<string, unknown>) {
+    return callHostHook("useChannelDropTarget", [handler, options]);
+}
+
+export function useChannelStatusNames(channelValuePaths: string[]) {
+    return callHostHook("useChannelStatusNames", [channelValuePaths]);
+}
+
 /** Opens resources through the host's docked-layout navigation. */
 export function useResourceNavigation() {
     return callHostHook("useResourceNavigation");

@@ -40,3 +40,34 @@ Build output is `ui/index.js`. The live registry supplies installed-plugin contr
 Schematic node renderers and configuration UI are interface-owned. Place engine-readable palette JSON beneath `files/workspace/global_data/schematic_nodes/...`; installation mirrors it into the engine configuration root.
 
 Public entrypoints include the main registry types, `tasks`, `resources`, `plugin-settings`, `module-configs`, `schematic-nodes`, `hooks`, `ui`, `utils`, `runtime`, `react`, and the Tailwind preset.
+
+## Stable resource identities
+
+Resource contribution IDs remain plugin-qualified, but a plugin can preserve an established storage and navigation identity with `resourceName`:
+
+```jsx
+registry.addResource({
+  id: "editor",
+  name: "Checklists",
+  resourceName: "checklists",
+  type: "directory",
+  icon: ChecklistsIcon,
+  component: ChecklistsEditor,
+});
+```
+
+The contribution above is `checklists.editor`; its runtime, file, tab, link, and collaboration identity is `checklists`. Runtime names must be safe single path segments and cannot collide with core or other loaded resources.
+
+Resource components receive the typed `ResourceComponentProps` contract. It includes initial reads, error/loading callbacks, live edits, presence, sync status, and `saveResourceContent(content, {silent: true})` for debounced autosaves that should not emit success toasts.
+
+## Host Markdown and chips
+
+Import the shared renderer from `@dartwic/interface-sdk/markdown`:
+
+```jsx
+import {MarkdownRenderer, defineMarkdownChip} from "@dartwic/interface-sdk/markdown";
+```
+
+`MarkdownRenderer` is host-owned and renders ordinary Markdown unless a specific instance receives chip definitions. A `defineMarkdownChip` descriptor supplies an ID, token parser, serializer, and React renderer; the interface host turns it into the private TipTap/ProseMirror extension. Channel drop behavior is similarly opt-in through `getChannelDropActions`.
+
+Use `editorRef` for `getMarkdown`, `setMarkdown`, `applyRemoteEdits`, `focusHeading`, `getPresenceSnapshot`, and `hasFocus`. Plugin code must use `@dartwic/interface-sdk/react` and host SDK UI/Markdown abstractions. Do not bundle another React runtime or import TipTap/ProseMirror.
