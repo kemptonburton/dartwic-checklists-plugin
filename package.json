@@ -1,0 +1,16 @@
+{
+  "name": "dartwic-checklists-plugin",
+  "private": true,
+  "version": "2.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "package": "node build.mjs --zip",
+    "test": "node --test interface/src/*.test.js",
+    "typecheck": "tsc -p interface/sdk/tsconfig.json --noEmit"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.0",
+    "typescript": "^5.8.2"
+  }
+}

@@ -1,0 +1,34 @@
+import React from "../sdk/react.ts";
+import {definePlugin} from "../sdk/index.ts";
+import {ChecklistsEditor, ChecklistEmptyContextPanel} from "./editor.jsx";
+
+function ListChecksIcon({className = "", size = 20, ...props}) {
+    return <svg {...props} className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m3 7 2 2 4-4"/><path d="M13 6h8"/><path d="m3 17 2 2 4-4"/><path d="M13 18h8"/></svg>;
+}
+
+export default definePlugin({
+    id: "checklists",
+    name: "DARTWIC Checklists",
+    register(registry) {
+        registry.addResource({
+            id: "editor",
+            name: "Checklists",
+            resourceName: "checklists",
+            icon: ListChecksIcon,
+            label: "Checklists",
+            context_label: "Markdown Chip Context",
+            context_default_content: ChecklistEmptyContextPanel,
+            type: "directory",
+            component: ChecklistsEditor,
+            file_extension: "md",
+            file_extensions: ["md"],
+            excluded_file_names: [],
+            excluded_paths: [],
+            tree_file_icon: ListChecksIcon,
+            tree_directory_icon: null,
+            show_file_extensions: false,
+            enable_directory_resource_groups: true,
+            resource_on_create_file_data: "# New Checklist\n\n- [ ] First item\n"
+        });
+    }
+});
