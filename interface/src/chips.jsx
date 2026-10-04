@@ -117,7 +117,7 @@ function ChannelButtonChip({token, canEdit, mode, commandEnabled, selected, sele
         return () => removeChannelFromTelemetry(channelName);
     }, [addChannelToTelemetry, channelName, removeChannelFromTelemetry]);
     const value = getChannelValue(channels, parsed.channelReference);
-    return <span className="relative inline-flex"><ConsoleAlert alertTags={[parsed.channelReference, channelName].filter(Boolean)} /><StaleChannelsTooltip channelNames={staleChannelNames} notFoundChannelNames={notFoundChannelNames} contextTitle="Markdown Channel Context"><Button type="button" variant="outline" size="sm" className={`${chipClass}${selected ? selectedClass : ""}${notFoundChannelNames.length ? " text-destructive" : staleChannelNames.length ? " text-yellow" : ""}`} disabled={mode !== "edit" && (!commandEnabled || commanding)} onMouseDown={(event) => {
+    return <span className="relative inline-flex"><ConsoleAlert alertTags={[parsed.channelReference, channelName].filter(Boolean)} /><StaleChannelsTooltip channelNames={staleChannelNames} notFoundChannelNames={notFoundChannelNames} contextTitle="Markdown Channel Context"><Button type="button" variant="outline" size="sm" className={`${chipClass} h-6 min-h-6 px-1.5 py-0 text-xs leading-none${selected ? selectedClass : ""}${notFoundChannelNames.length ? " text-destructive" : staleChannelNames.length ? " text-yellow" : ""}`} disabled={mode !== "edit" && (!commandEnabled || commanding)} onMouseDown={(event) => {
         if (!(canEdit && mode === "edit")) return;
         event.preventDefault(); event.stopPropagation(); select();
         openTokenPanel(contextPanel, "Channel Button", <ChannelConfig token={token} type="button" updateToken={updateToken} />);
@@ -149,16 +149,19 @@ function ChannelButtonChip({token, canEdit, mode, commandEnabled, selected, sele
     }}>{parsed.showName ? `${channelName} ` : ""}{formatChannelValue(value)}</Button></StaleChannelsTooltip></span>;
 }
 
-function ResizableEmbed({children, height, onResize, selected, width}) {
+function ResizableEmbed({children, height, maxHeight = Number.POSITIVE_INFINITY, maxWidth = Number.POSITIVE_INFINITY, minHeight = 100, minWidth = 160, onResize, resizable = false, selected, width}) {
     const startResize = (event) => {
         event.preventDefault(); event.stopPropagation();
         const startX = event.clientX; const startY = event.clientY;
         const startWidth = width; const startHeight = height;
-        const move = (moveEvent) => onResize(Math.max(160, startWidth + moveEvent.clientX - startX), Math.max(100, startHeight + moveEvent.clientY - startY));
+        const move = (moveEvent) => onResize(
+            Math.max(minWidth, Math.min(maxWidth, startWidth + moveEvent.clientX - startX)),
+            Math.max(minHeight, Math.min(maxHeight, startHeight + moveEvent.clientY - startY))
+        );
         const stop = () => { window.removeEventListener("pointermove", move); window.removeEventListener("pointerup", stop); };
         window.addEventListener("pointermove", move); window.addEventListener("pointerup", stop);
     };
-    return <div className={`relative inline-flex overflow-hidden rounded-md border border-border${selected ? selectedClass : ""}`} style={{width, height}}>{children}<button type="button" aria-label="Resize embed" className="absolute bottom-0 right-0 z-20 h-4 w-4 cursor-se-resize border-l border-t border-border bg-muted" onPointerDown={startResize} /></div>;
+    return <div className={`relative inline-flex overflow-hidden align-middle leading-none${resizable ? ` rounded-md border border-border${selected ? selectedClass : ""}` : ""}`} style={{width, height}}>{children}{resizable ? <button type="button" aria-label="Resize embed" className="absolute bottom-0 right-0 z-20 h-4 w-4 cursor-se-resize border-l border-t border-border bg-muted" onPointerDown={startResize} /> : null}</div>;
 }
 
 function EmbedConfig({token, keyName, updateToken}) {
@@ -172,7 +175,7 @@ function RemoteViewChip({token, canEdit, mode, commandEnabled, selected, select,
     const panel = useBottomContextPanel();
     if (!parsed) return `@remote-view(${token})`;
     const width = parsed.width || 480; const height = parsed.height || 280;
-    return <ResizableEmbed width={width} height={height} selected={selected} onResize={(nextWidth, nextHeight) => updateToken(formatEmbedToken({...parsed, width: nextWidth, height: nextHeight}, "remoteViewName"))}><div className="h-full w-full" onMouseDown={(event) => {
+    return <ResizableEmbed width={width} height={height} resizable={canEdit && mode === "edit"} selected={selected} onResize={(nextWidth, nextHeight) => updateToken(formatEmbedToken({...parsed, width: nextWidth, height: nextHeight}, "remoteViewName"))}><div className="h-full w-full" onMouseDown={(event) => {
         if (!(canEdit && mode === "edit")) return;
         event.preventDefault(); event.stopPropagation(); select(); openTokenPanel(panel, "Remote View", <EmbedConfig token={token} keyName="remoteViewName" updateToken={updateToken} />);
     }}><EmbeddedRemoteView commandEnabled={commandEnabled} schematicPath={parsed.schematicPath} remoteViewName={parsed.remoteViewName} /></div></ResizableEmbed>;
@@ -182,8 +185,8 @@ function SchematicNodeChip({token, canEdit, mode, commandEnabled, selected, sele
     const parsed = parseEmbedToken(token, "nodeId");
     const panel = useBottomContextPanel();
     if (!parsed) return `@schematic-node(${token})`;
-    const width = parsed.width || 240; const height = parsed.height || 160;
-    return <ResizableEmbed width={width} height={height} selected={selected} onResize={(nextWidth, nextHeight) => updateToken(formatEmbedToken({...parsed, width: nextWidth, height: nextHeight}, "nodeId"))}><div className="h-full w-full" onMouseDown={(event) => {
+    const width = parsed.width || 96; const height = parsed.height || 48;
+    return <ResizableEmbed width={width} height={height} minWidth={72} minHeight={36} maxWidth={320} maxHeight={200} resizable={canEdit && mode === "edit"} selected={selected} onResize={(nextWidth, nextHeight) => updateToken(formatEmbedToken({...parsed, width: nextWidth, height: nextHeight}, "nodeId"))}><div className="h-full w-full" onMouseDown={(event) => {
         if (!(canEdit && mode === "edit")) return;
         event.preventDefault(); event.stopPropagation(); select(); openTokenPanel(panel, "Schematic Node", <EmbedConfig token={token} keyName="nodeId" updateToken={updateToken} />);
     }}><EmbeddedSchematicNode commandEnabled={commandEnabled} schematicPath={parsed.schematicPath} nodeId={parsed.nodeId} /></div></ResizableEmbed>;
