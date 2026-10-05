@@ -1,13 +1,13 @@
 import {createHostComponent} from "../internal/createHostComponent.ts";
 import type {MarkdownChipDefinition, MarkdownRendererProps} from "./types.ts";
 
-/** Shared host Markdown renderer. The host owns React, TipTap, and ProseMirror. */
+/** Shared host Markdown renderer. The host owns React, TipTap, and ProseMirror.  @dartwic-reference @category Markdown */
 export const MarkdownRenderer = createHostComponent<MarkdownRendererProps>(
     "MarkdownRenderer",
     (hostApi) => hostApi.components.MarkdownRenderer,
 );
 
-/** Defines a plugin-owned Markdown chip without exposing the host editor runtime. */
+/** Defines a plugin-owned Markdown chip without exposing the host editor runtime.  @dartwic-reference @category Markdown */
 export function defineMarkdownChip<Token = unknown>(definition: MarkdownChipDefinition<Token>): MarkdownChipDefinition<Token> {
     if (!definition || typeof definition !== "object") {
         throw new Error("defineMarkdownChip(...) requires a definition.");

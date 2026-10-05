@@ -250,7 +250,7 @@ export interface ManualRefreshButtonProps extends ButtonProps {
     isRefreshing?: boolean;
 }
 
-/** Props for selecting a live module instance compatible with a plugin task. */
+/** Props for selecting a live module instance compatible with a plugin task.  @dartwic-reference @category DARTWIC UI Components */
 export interface ModuleInstanceSelectProps extends HostComponentProps {
     /** Engine plugin that must own every displayed module instance. */
     pluginId: string;
@@ -266,4 +266,117 @@ export interface ModuleInstanceSelectProps extends HostComponentProps {
     disabled?: boolean;
     /** Shows loading, incompatibility, and empty-state diagnostics. */
     showStatus?: boolean;
+}
+
+/** One searchable option displayed by the host-owned combobox. @dartwic-reference @category DARTWIC UI Components */
+export interface ComboboxSearchItem {
+    value: string;
+    label: HostNode;
+}
+
+/** Props for the standard host-owned searchable list selector. @dartwic-reference @category DARTWIC UI Components */
+export interface ComboboxSearchProps extends HostComponentProps {
+    items: ComboboxSearchItem[];
+    initialValue?: string;
+    placeholder?: string;
+    commandSearchPlaceholder?: string;
+    commandSearchEmptyPlaceholder?: string;
+    overrideValue?: HostNode;
+    onSelect?: (value: string) => void;
+    unSelectable?: boolean;
+    popoverContentClassName?: string;
+}
+
+/** Shared module selector, module link, and opt-in live connection status. @dartwic-reference @category DARTWIC UI Components */
+export interface ModuleInstanceConnectionProps extends ModuleInstanceSelectProps {
+    /** Supporting copy shown beneath the shared control. */
+    description?: string;
+    /** Hides the selector and presents only the linked module. */
+    showSelector?: boolean;
+    /** Shows the module's plugin-declared connection state when available. */
+    showConnectionStatus?: boolean;
+    /** Shows connection-state text instead of a compact indicator. */
+    statusText?: boolean;
+    /** Uses the compact header/footer layout. */
+    compact?: boolean;
+}
+
+/** One editable row in the standard task channel-binding table. @dartwic-reference @category DARTWIC UI Components */
+export interface TaskBinding {
+    id?: string;
+    [name: string]: unknown;
+}
+
+/** Standard task binding table shared by plugin task editors. @dartwic-reference @category DARTWIC UI Components */
+export interface TaskBindingTableProps extends HostComponentProps {
+    title?: string;
+    bindings: TaskBinding[];
+    onBindingsChange: (bindings: TaskBinding[]) => void;
+    bindingTypes: Array<{value: string; label: string}>;
+    channelMode?: "read" | "write";
+    typeKey?: string;
+    addressKey?: string;
+    channelKey?: string;
+    typeLabel?: string;
+    addressLabel?: string;
+    channelLabel?: string;
+    channelPlaceholder?: string;
+    emptyMessage?: string;
+    addLabel?: string;
+    addDisabled?: boolean;
+    normalizeChannelValue?: (value: string) => string;
+    createBinding?: (sequence: number) => TaskBinding;
+    /** Optional plugin-defined columns rendered with the standard host table styling. */
+    columns?: Array<{
+        key?: string;
+        label: HostNode;
+        width?: string;
+        render: (binding: TaskBinding, index: number, updateBinding: (binding: TaskBinding) => void) => HostNode;
+    }>;
+    /** Optional controls replacing the standard single add button. */
+    headerActions?: HostNode;
+    /** Minimum width of the horizontally scrollable table content. */
+    minTableWidth?: string;
+}
+
+/** One live channel rendered beneath a linked module task.  @dartwic-reference @category DARTWIC UI Components */
+export interface ModuleRuntimeChannel {
+    /** RAPID channel name used for live telemetry. */
+    name: string;
+    /** Optional shorter visible label; the channel name is used by default. */
+    label?: string;
+    /** Direction relative to the device. */
+    direction?: "input" | "output" | "diagnostic";
+    /** Optional register, address, or mapping detail. */
+    detail?: string;
+}
+
+/** Props for the shared opt-in module connection indicator.  @dartwic-reference @category DARTWIC UI Components */
+export interface ModuleConnectionStatusProps extends HostComponentProps {
+    presentation: {
+        channel: string;
+        label?: string;
+        endpoint?: string;
+        connectedValue?: string | number | boolean;
+    };
+    showText?: boolean;
+    compact?: boolean;
+}
+
+/** Props for the standard linked-task, status, and channel overview on module pages.  @dartwic-reference @category DARTWIC UI Components */
+export interface ModuleRuntimeOverviewProps extends HostComponentProps {
+    /** Module instance whose linked tasks are displayed. */
+    instanceName: string;
+    /** Optional live boolean channel used for connection state. */
+    connectionChannel?: string;
+    /** Visible label beside the connection state. */
+    connectionLabel?: string;
+    /** Human-readable connection endpoint. */
+    endpoint?: string;
+    /** Optional task-type allowlist. */
+    taskTypeIds?: string[];
+    /** Maps a linked task's plugin arguments to visible live channels. */
+    resolveTaskChannels?: (task: any) => ModuleRuntimeChannel[];
+    /** Empty-state copy when no tasks reference the module. */
+    emptyMessage?: string;
 }

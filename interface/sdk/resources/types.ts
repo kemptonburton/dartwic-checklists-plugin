@@ -29,17 +29,19 @@ export interface ResourceDefinition {
     context_default_content?: any;
 }
 
+/** Resource load or save failure state presented by the host. @dartwic-reference @category Resources */
 export interface ResourceErrorState {
     error: boolean;
     message: string;
 }
 
+/** Options controlling resource save feedback. @dartwic-reference @category Resources */
 export interface SaveResourceContentOptions {
     /** Suppresses the successful-save toast. Save failures are still surfaced. */
     silent?: boolean;
 }
 
-/** Props supplied by the host to component resource contributions. */
+/** Props supplied by the host to component resource contributions.  @dartwic-reference @category Resources */
 export interface ResourceComponentProps {
     resource_name: string;
     resource_config: ResourceDefinition;

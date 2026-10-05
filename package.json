@@ -1,16 +1,20 @@
 {
   "name": "dartwic-checklists-plugin",
   "private": true,
-  "version": "2.0.2",
+  "version": "2.0.3",
   "type": "module",
   "scripts": {
+    "verify:sdk": "node scripts/plugin-sdk-lock.mjs",
+    "prebuild": "npm run verify:sdk",
+    "prepackage": "npm run verify:sdk",
     "build": "node build.mjs",
     "package": "node build.mjs --zip",
     "test": "node --test interface/src/*.test.js",
-    "typecheck": "tsc -p interface/sdk/tsconfig.json --noEmit"
+    "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "devDependencies": {
     "esbuild": "^0.25.0",
+    "tailwindcss-animate": "^1.0.7",
     "typescript": "^5.8.2"
   }
 }

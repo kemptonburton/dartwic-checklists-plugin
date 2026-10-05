@@ -4,19 +4,29 @@ import type {
     InterfacePluginDefinition,
     InterfacePluginRegistrar,
     MaterializedInterfacePlugin,
+    ModuleConnectionDefinition,
+    ModuleConnectionPresentation,
     ModuleUiDefinition,
+    PopupUiDefinition,
     ResourceContributionDefinition,
     SchematicNodeContributionDefinition,
     SettingsPanelDefinition,
     TaskUiDefinition,
+    ValueFormatDefinition,
 } from "./types/index.ts";
+export {createNotificationClient} from "./notifications/index.ts";
+export {createStorageClient, installationPath, instancePath, workspacePath, projectPath, projectSettingsPath, projectRuntimePath, projectCachePath} from './storage/index.ts';
+export {createWorkspaceAssetClient, workspaceAssetPath, WORKSPACE_ASSET_ROOT} from './assets/index.ts';
+export type {NotificationSeverity, SettingsDestination, LocalNotification, SettingsIssue, LocalNotificationClient} from "./notifications/index.ts";
 
 const EMPTY_CONTRIBUTIONS = (): InterfaceContributions => ({
+    valueFormats: [],
     taskUis: [],
     moduleUis: [],
     resources: [],
     schematicNodes: [],
     settingsPanels: [],
+    popupUis: [],
 });
 
 function assertLocalId(value: string, kind: string): string {
@@ -46,6 +56,8 @@ function materializePlugin(definition: InterfacePluginDefinition): MaterializedI
     const resources: MaterializedInterfacePlugin["resources"] = [];
     const schematicNodes: MaterializedInterfacePlugin["schematicNodes"] = [];
     const settingsPanels: MaterializedInterfacePlugin["settingsPanels"] = [];
+    const popupUis: MaterializedInterfacePlugin["popupUis"] = {};
+    const valueFormats: MaterializedInterfacePlugin["valueFormats"] = {};
     const categoryIds = new Map<keyof InterfaceContributions, Set<string>>();
     const resourceNames = new Set<string>();
 
@@ -73,6 +85,13 @@ function materializePlugin(definition: InterfacePluginDefinition): MaterializedI
     }
 
     const registry: InterfacePluginRegistrar = {
+        addValueFormat(value: ValueFormatDefinition) {
+            const id = addEntry("valueFormats", value.id, value.name);
+            if (!/^[a-z0-9][a-z0-9_.-]*$/.test(id)) throw new Error(`Value format '${id}' must use lowercase letters, digits, dots, underscores, or hyphens.`);
+            if (typeof value.format !== "function") throw new Error(`Value format '${id}' needs format(value).`);
+            valueFormats[id] = {...value, id};
+            return id;
+        },
         addTaskUi(value: TaskUiDefinition) {
             const id = addEntry("taskUis", value.id, value.name);
             if (!value.card && !value.editor) {
@@ -119,6 +138,19 @@ function materializePlugin(definition: InterfacePluginDefinition): MaterializedI
             settingsPanels.push({...value, id});
             return id;
         },
+        addPopupUi(value: PopupUiDefinition) {
+            const id = addEntry("popupUis", value.id, value.name, {
+                requestType: value.requestType,
+                resultType: value.resultType,
+                requestSchema: value.requestSchema,
+                resultSchema: value.resultSchema,
+            });
+            if (typeof value.component !== "function") {
+                throw new Error(`Popup UI '${id}' must provide a component.`);
+            }
+            popupUis[id] = {...value, id};
+            return id;
+        },
     };
 
     definition.register(registry);
@@ -133,6 +165,8 @@ function materializePlugin(definition: InterfacePluginDefinition): MaterializedI
         resources,
         schematicNodes,
         settingsPanels,
+        popupUis,
+        valueFormats,
         contributions: {interface: contributions},
     };
 }
@@ -161,7 +195,10 @@ export type {
     InterfacePluginHostApi,
     InterfacePluginRegistrar,
     MaterializedInterfacePlugin,
+    ModuleConnectionDefinition,
+    ModuleConnectionPresentation,
     ModuleUiDefinition,
+    PopupUiDefinition,
     ResourceContributionDefinition,
     SchematicNodeContributionDefinition,
     SettingsPanelDefinition,

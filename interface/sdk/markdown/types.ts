@@ -1,8 +1,11 @@
 import type {HostEventHandler, HostNode} from "../ui/types.ts";
 
+/** Select read-only viewing or Markdown editing. @dartwic-reference @category Markdown */
 export type MarkdownMode = "view" | "edit";
+/** Choose line numbers for all lines, checkboxes, or no lines. @dartwic-reference @category Markdown */
 export type MarkdownLineNumberMode = "all" | "checkbox" | "off";
 
+/** Document selection offsets used for editing and participant presence. @dartwic-reference @category Markdown */
 export interface MarkdownSelection {
     from: number;
     to: number;
@@ -10,6 +13,7 @@ export interface MarkdownSelection {
     head?: number;
 }
 
+/** Imperative access to Markdown content, remote edits, heading navigation, focus, and presence. @dartwic-reference @category Markdown */
 export interface MarkdownRendererHandle {
     getMarkdown(): string;
     setMarkdown(markdown: string): void;
@@ -19,6 +23,7 @@ export interface MarkdownRendererHandle {
     hasFocus(): boolean;
 }
 
+/** Parsed chip token and selection/edit callbacks supplied to its component. @dartwic-reference @category Markdown */
 export interface MarkdownChipRenderProps<Token = unknown> {
     token: Token;
     tokenId: string;
@@ -31,11 +36,13 @@ export interface MarkdownChipRenderProps<Token = unknown> {
     updateToken(nextToken: Token): void;
 }
 
+/** Matched source text and typed token returned by a chip parser. @dartwic-reference @category Markdown */
 export interface MarkdownChipParseResult<Token = unknown> {
     raw: string;
     token: Token;
 }
 
+/** Parser, serializer, and render component for a plugin-owned Markdown chip. @dartwic-reference @category Markdown */
 export interface MarkdownChipDefinition<Token = unknown> {
     id: string;
     prefix?: string;
@@ -45,6 +52,7 @@ export interface MarkdownChipDefinition<Token = unknown> {
     component: (props: MarkdownChipRenderProps<Token>) => HostNode;
 }
 
+/** Labeled action offered when a channel is dropped into Markdown. @dartwic-reference @category Markdown */
 export interface MarkdownDropAction {
     id: string;
     label: string;
@@ -52,6 +60,7 @@ export interface MarkdownDropAction {
     onSelect(): void;
 }
 
+/** Dropped channel, pointer position, and callback for inserting Markdown. @dartwic-reference @category Markdown */
 export interface MarkdownChannelDropContext {
     channelName: string;
     clientPosition?: {x: number; y: number};
@@ -59,6 +68,7 @@ export interface MarkdownChannelDropContext {
     [name: string]: unknown;
 }
 
+/** Remote participant identity, appearance, selection, and cursor presence. @dartwic-reference @category Markdown */
 export interface MarkdownRemoteParticipant {
     clientId?: string;
     username?: string;
@@ -71,6 +81,7 @@ export interface MarkdownRemoteParticipant {
     presenceMode?: MarkdownMode;
 }
 
+/** Content, editing controls, chips, collaboration, and callbacks for the host Markdown renderer. @dartwic-reference @category Markdown */
 export interface MarkdownRendererProps {
     [name: string]: unknown;
     value: string;
