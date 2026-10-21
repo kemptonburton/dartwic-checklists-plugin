@@ -16,7 +16,7 @@ export const ModuleInstanceSelect = createHostComponent<ModuleInstanceSelectProp
 export const ModuleInstanceConnection = createHostComponent<ModuleInstanceConnectionProps>("ModuleInstanceConnection", (hostApi) => hostApi.helpers.ModuleInstanceConnection);
 /** Renders the shared live connection indicator for an opted-in module.  @dartwic-reference @category DARTWIC UI Components */
 export const ModuleConnectionStatus = createHostComponent<ModuleConnectionStatusProps>("ModuleConnectionStatus", (hostApi) => hostApi.helpers.ModuleConnectionStatus);
-/** Shows a module's linked tasks, live state, and mapped channels with shared Start, Stop and Hold controls followed by a compact read-only measured frequency. Task buttons use two-click confirmation, expiring after four seconds. Controls require a connected administrator session and are disabled while rebuilding. Writes are asynchronous requests; live telemetry reports state separately from request acceptance. @dartwic-reference @category DARTWIC UI Components */
+/** Shows linked tasks, state, channels and measured frequency. Start, Stop and Hold require a connected administrator and two clicks within four seconds; rebuilding disables them. Writes request changes asynchronously; live telemetry reports state separately. @dartwic-reference @category DARTWIC UI Components */
 export const ModuleRuntimeOverview = createHostComponent<ModuleRuntimeOverviewProps>("ModuleRuntimeOverview", (hostApi) => hostApi.helpers.ModuleRuntimeOverview);
 /** Renders the standard editable task channel-binding table. @dartwic-reference @category DARTWIC UI Components */
 export const TaskBindingTable = createHostComponent<TaskBindingTableProps>("TaskBindingTable", (hostApi) => hostApi.helpers.TaskBindingTable);

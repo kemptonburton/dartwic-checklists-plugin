@@ -1,9 +1,6 @@
-# DARTWIC Checklists 2.0.3
+# DARTWIC Checklists 2.0.4
 
-- Collaborative Markdown checklists and DARTWIC chips using the host React runtime and shared Markdown renderer.
-- Updated the bundled Interface SDK and its verified source lock to the current DARTWIC 2.0.0 baseline.
-- Requires DARTWIC Engine and Interface 2.0.0 or newer; core host packages are released separately.
-
-`plugin.zip` contains the interface-only plugin. `plugin.json` is the installation manifest; `release-manifest.json` records SHA-256 checksums and sizes. The JavaScript bundle is platform independent.
-
-Verified: checklist token round-trip test, TypeScript typecheck, SDK snapshot hashes, and packaged manifest/layout. Installation in a running Interface was not exercised in this release pass.
+- Uses explicit platform ZIP filenames; generic plugin.zip releases are no longer supported.
+- Both plugin-win32-x64.zip and plugin-linux-x64.zip contain the same Interface-only JavaScript bundle. No native libraries are needed.
+- Bundled SDK locks, package manifests, and release checksums are verified. Requires DARTWIC Engine and Interface 2.0.0 or newer.
+- README documents exact uploaded assets, manifest, archive structure, and build commands.

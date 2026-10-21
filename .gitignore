@@ -2,3 +2,5 @@ node_modules/
 plugin/
 *.zip
 /release-manifest.json
+
+/plugin-*.zip
