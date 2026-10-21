@@ -24,5 +24,5 @@ await cp(path.join(root, "plugin.json"), path.join(outputRoot, "plugin.json"));
 console.log(`Built ${manifest.id} interface plugin at ${outputRoot}`);
 
 if (process.argv.includes("--zip")) {
-    await packagePluginRelease(root, ["win32-x64", "linux-x64"]);
+    await packagePluginRelease(root);
 }

@@ -1,6 +1,6 @@
-# DARTWIC Checklists 2.0.4
+# DARTWIC Checklists 2.0.5
 
-- Uses explicit platform ZIP filenames; generic plugin.zip releases are no longer supported.
-- Both plugin-win32-x64.zip and plugin-linux-x64.zip contain the same Interface-only JavaScript bundle. No native libraries are needed.
-- Bundled SDK locks, package manifests, and release checksums are verified. Requires DARTWIC Engine and Interface 2.0.0 or newer.
-- README documents exact uploaded assets, manifest, archive structure, and build commands.
+- Ships one portable `plugin.zip` for this Interface-only JavaScript plugin, with no duplicate Windows/Linux packages.
+- Declares `contains_engine_plugin: false` and `contains_interface_plugin: true`; native Engine plugins continue to require platform-specific ZIPs.
+- Includes the matching `plugin.json` and SHA-256 receipt. Requires DARTWIC Interface 2.0.0 or newer.
+- README documents the uploaded assets and complete archive layout. Packaging needs no native toolchain.

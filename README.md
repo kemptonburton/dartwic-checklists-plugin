@@ -12,16 +12,15 @@ The matching `@dartwic/interface-sdk` 2.0.0 snapshot is bundled under `interface
 
 ## GitHub release assets and layout
 
-Release `2.0.4` uses tag `v2.0.4` and these exact uploaded assets:
+Release `2.0.5` uses tag `v2.0.5` and these exact uploaded assets:
 
 ```text
 plugin.json
-  plugin-win32-x64.zip
-  plugin-linux-x64.zip
+plugin.zip
 release-manifest.json         # generated SHA-256 checksums
 ```
 
-Generic `plugin.zip` and separate `plugin-debug.zip` assets are not supported. The root `plugin.json` must also exist in the tagged source. Upload this same manifest directly to the release:
+`plugin.zip` is the portable Interface-only package. It is accepted because the manifest explicitly declares `contains_engine_plugin: false` and `contains_interface_plugin: true`. Native Engine plugins still require platform-specific ZIPs; separate `plugin-debug.zip` assets are not supported. The root `plugin.json` must also exist in the tagged source. Upload this same manifest directly to the release:
 
 ```json
 {
@@ -29,7 +28,7 @@ Generic `plugin.zip` and separate `plugin-debug.zip` assets are not supported. T
   "name": "DARTWIC Checklists",
   "description": "First-party collaborative Markdown checklists and DARTWIC chips.",
   "author": "Kempton Burton",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "minInterfaceVersion": "2.0.0",
   "contains_engine_plugin": false,
   "contains_interface_plugin": true,
@@ -37,7 +36,7 @@ Generic `plugin.zip` and separate `plugin-debug.zip` assets are not supported. T
 }
 ```
 
-Each ZIP has this exact layout:
+The single ZIP has this exact layout:
 
 ```text
 plugin/
@@ -45,6 +44,6 @@ plugin/
   interface/checklists/ui/index.js
 ```
 
-Run `npm ci`, `npm test`, `npm run typecheck`, then `npm run package`. The last command generates both platform-named ZIPs from the same Interface-only JavaScript output. There are no native binaries or separate Debug variant, and no C++ toolchain or vcpkg is required.
+Run `npm ci`, `npm test`, `npm run typecheck`, then `npm run package`. The last command generates one portable `plugin.zip` from the Interface-only JavaScript output and removes obsolete platform ZIPs. There are no native binaries or separate Debug variant, and no C++ toolchain or vcpkg is required.
 
-The plugin version, root manifest, and every manifest inside the ZIP must match. Publish a new version for changed assets. DARTWIC chooses native downloads by the Engine OS, independently of the Interface OS, and rejects missing platform packages. The full external-developer contract is in [Packaging and Installation](https://github.com/kemptonburton/dartwic-example-plugin#github-release-contract).
+The plugin version, root manifest, and every manifest inside the ZIP must match. Publish a new version for changed assets. DARTWIC offers this portable package on every Interface host and displays an Any platform badge. This rule never supplies a native Engine library. The full external-developer contract is in [Packaging and Installation](https://github.com/kemptonburton/dartwic-example-plugin#github-release-contract).

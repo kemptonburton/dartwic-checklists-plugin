@@ -18,7 +18,7 @@ async function run(command, args, cwd) {
   });
 }
 
-export async function verifyPluginOutput(root, platform = getPluginPlatform()) {
+export async function verifyPluginOutput(root, platform = null) {
   const manifest = JSON.parse(await fs.readFile(path.join(root, "plugin.json"), "utf8"));
   const packageJson = JSON.parse(await fs.readFile(path.join(root, "package.json"), "utf8"));
   if (manifest.version !== packageJson.version) throw new Error("package.json and plugin.json versions must match.");
@@ -28,6 +28,7 @@ export async function verifyPluginOutput(root, platform = getPluginPlatform()) {
       || (manifest.contains_engine_plugin && !manifest.minEngineVersion)
       || (manifest.contains_interface_plugin && !manifest.minInterfaceVersion)) throw new Error("Invalid root plugin.json; see the README release contract.");
   if (!/^[A-Za-z0-9_-]+$/.test(manifest.id)) throw new Error("Plugin ID must be a safe directory name.");
+  if (manifest.contains_engine_plugin) platform ??= getPluginPlatform();
   const sides = [ ...(manifest.contains_engine_plugin ? ["engine", "engine-debug"] : []), ...(manifest.contains_interface_plugin ? ["interface"] : []) ];
   for (const side of sides) {
     const output = path.join(root, "plugin", side, manifest.id);
@@ -49,9 +50,11 @@ export async function verifyPluginOutput(root, platform = getPluginPlatform()) {
   return {manifest, sides};
 }
 
-export async function packagePluginRelease(root, platforms = [getPluginPlatform()]) {
-  if (!platforms.length || platforms.some(platform => !["win32-x64", "linux-x64"].includes(platform))) throw new Error("Choose win32-x64 and/or linux-x64.");
+export async function packagePluginRelease(root, platforms = null) {
   const manifest = JSON.parse(await fs.readFile(path.join(root, "plugin.json"), "utf8"));
+  const native = manifest.contains_engine_plugin;
+  platforms = native ? (platforms ?? [getPluginPlatform()]) : ["any"];
+  if (native && (!platforms.length || platforms.some(platform => !["win32-x64", "linux-x64"].includes(platform)))) throw new Error("Choose win32-x64 and/or linux-x64.");
   if (manifest.contains_engine_plugin && (platforms.length !== 1 || platforms[0] !== getPluginPlatform())) throw new Error("Build native plugins on their target platform; never relabel a native ZIP.");
   const stage = await fs.mkdtemp(path.join(os.tmpdir(), "dartwic-plugin-release-"));
   const filenames = ["plugin.json"];
@@ -65,14 +68,16 @@ export async function packagePluginRelease(root, platforms = [getPluginPlatform(
     const files = path.join(root, "plugin", "files");
     if (await fs.stat(files).catch(() => null)) await fs.cp(files, path.join(stage, "plugin", "files"), {recursive: true});
     for (const platform of platforms) {
-      const name = `plugin-${platform}.zip`;
+      const name = native ? `plugin-${platform}.zip` : "plugin.zip";
       const archive = path.join(root, name);
       await fs.rm(archive, {force: true});
       if (process.platform === "win32") await run("powershell.exe", ["-NoProfile", "-Command", `Compress-Archive -LiteralPath 'plugin' -DestinationPath '${archive.replaceAll("'", "''")}' -Force`], stage);
       else await run("zip", ["-qr", archive, "plugin"], stage);
       filenames.push(name);
     }
-    for (const legacy of ["plugin.zip", "plugin-debug.zip"]) await fs.rm(path.join(root, legacy), {force: true});
+    for (const obsolete of ["plugin.zip", "plugin-debug.zip", "plugin-win32-x64.zip", "plugin-linux-x64.zip"].filter(name => !filenames.includes(name))) {
+      await fs.rm(path.join(root, obsolete), {force: true});
+    }
     const receipt = {version: manifest.version, platforms, engineVariants: manifest.contains_engine_plugin ? ["engine", "engine-debug"] : [], files: {}};
     for (const name of filenames) {
       const bytes = await fs.readFile(path.join(root, name));
