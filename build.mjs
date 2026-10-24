@@ -21,6 +21,7 @@ await build({
     legalComments: "none"
 });
 await cp(path.join(root, "plugin.json"), path.join(outputRoot, "plugin.json"));
+await cp(path.join(root, "assets"), path.join(outputRoot, "assets"), {recursive: true});
 console.log(`Built ${manifest.id} interface plugin at ${outputRoot}`);
 
 if (process.argv.includes("--zip")) {
