@@ -1,8 +1,8 @@
 # DARTWIC Checklists Plugin
 
-The first-party interface-only Checklists resource for DARTWIC 2.0. It owns the checklist editor, token grammars, and five Markdown chips while using the interface host's React runtime and shared Markdown renderer.
+The first-party interface-only Checklists resource for DARTWIC. It owns the checklist editor, token grammars, and five Markdown chips while using the interface host's React runtime and shared Markdown renderer.
 
-Requires DARTWIC Engine and Interface 2.0.0 or newer.
+Requires DARTWIC Engine and Interface 2.0.0 or newer. Version 2.1.0 refreshes the bundled Interface SDK for the DARTWIC 2.1 bundle. Checklists has no native Engine library; Engine plugin ABI 6 does not apply to it. Interface host compatibility remains 1.
 
 Installing the plugin exposes the stable `checklists` resource. Uninstalling it only hides the resource; existing files in the engine-managed `checklists/` directory remain untouched and reappear after reinstalling.
 
@@ -12,7 +12,7 @@ The matching `@dartwic/interface-sdk` 2.0.0 snapshot is bundled under `interface
 
 ## GitHub release assets and layout
 
-Release `2.0.6` uses tag `v2.0.6` and these exact uploaded assets:
+Version `2.1.0` uses this package layout:
 
 ```text
 plugin.json
@@ -28,7 +28,7 @@ release-manifest.json         # generated SHA-256 checksums
   "name": "DARTWIC Checklists",
   "description": "First-party collaborative Markdown checklists and DARTWIC chips.",
   "author": "Kempton Burton",
-  "version": "2.0.6",
+  "version": "2.1.0",
   "minInterfaceVersion": "2.0.0",
   "contains_engine_plugin": false,
   "contains_interface_plugin": true,
