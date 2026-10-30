@@ -6,6 +6,8 @@ Requires DARTWIC Engine and Interface 2.0.0 or newer. Version 2.1.0 refreshes th
 
 Installing the plugin exposes the stable `checklists` resource. Uninstalling it only hides the resource; existing files in the engine-managed `checklists/` directory remain untouched and reappear after reinstalling.
 
+Selecting an editable Markdown chip keeps its controls in the context board while the panel updates or resizes. Opening another checklist restores the default chip prompt.
+
 ## Build
 
 The matching `@dartwic/interface-sdk` 2.0.0 snapshot is bundled under `interface/sdk` and verified against `sdk-lock.json`. Run `npm ci`, `npm test`, `npm run typecheck`, and `npm run package` after cloning.

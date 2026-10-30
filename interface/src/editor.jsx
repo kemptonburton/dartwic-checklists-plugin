@@ -39,7 +39,7 @@ export function ChecklistsEditor({
     const {clientInfo} = useClientInfo();
     const {getConnectedClientPresentation} = useConnectedClients();
     const {isParticipantVisibilityEnabled} = useResourceParticipantVisibility(resource_name, resource_path);
-    const contextPanel = useBottomContextPanel();
+    const {setTitle, setMode: setContextMode, setContent} = useBottomContextPanel();
     const editorRef = React.useRef(null);
     const sourceEditorId = React.useRef(editorId());
     const markdownRef = React.useRef("");
@@ -180,10 +180,10 @@ export function ChecklistsEditor({
     }, [client?.clientId, clientInfo?.admin, clientInfo?.client_username, flush, sendLiveResourcePresence]);
 
     React.useEffect(() => {
-        contextPanel.setTitle("Markdown Chip Context");
-        contextPanel.setMode("default");
-        contextPanel.setContent(<ChecklistEmptyContextPanel />);
-    }, [contextPanel]);
+        setTitle("Markdown Chip Context");
+        setContextMode("default");
+        setContent(<ChecklistEmptyContextPanel />);
+    }, [resource_name, resource_path, setTitle, setContextMode, setContent]);
 
     if (markdown === null) return null;
     return <div className="flex h-full w-full flex-col overflow-hidden">
